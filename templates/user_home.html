@@ -5,8 +5,6 @@
 </head>
 <body>
 	<h1>Catalog App</h1>
-	<p>Sign in below to add your items!</p>
-	<button id="login-btn">Login</button>
 
     <aside>
     	<h2>Latest Items</h2>
@@ -26,6 +24,8 @@
     	{%endfor%}
     	</ol>
     </main>
+
+    <a href="{{ url_for('create_category') }}">Add a New Category</a>
 </body>
 <script>
 	document.getElementById("login-btn").addEventListener('click', function() {
