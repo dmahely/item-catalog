@@ -2,8 +2,8 @@ from flask import Flask, render_template, request, make_response, redirect, flas
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from db_setup import Base, Item, Category, User
-from oauth2client.client import flow_from_clientsecrets
-from oauth2client.client import FlowExchangeError
+from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
+from functools import wraps
 import httplib2
 import json, random, string, requests
 
@@ -18,6 +18,15 @@ session = DBSession()
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 
+# Login required decorator
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in login_session:
+            return redirect(url_for('showLogin'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 # main page
 @app.route('/')
 @app.route('/categories/')
@@ -30,6 +39,7 @@ def show_home():
 		return render_template('user_home.html', categories = categories, latest_items = latest_items)
 
 @app.route('/categories/new', methods=['GET', 'POST'])
+@login_required
 def create_category():
 	if request.method == 'POST':
 		if 'user_id' not in login_session and 'email' in login_session:
@@ -43,6 +53,21 @@ def create_category():
 		return redirect(url_for("show_home"))
 	if request.method == 'GET':
 		return render_template('new_category.html')
+
+@app.route('/categories/<int:category_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_category(category_id):
+	category = session.query(Category).filter_by(id = category_id).one()
+	# if user is not authorized to edit this category
+	if category.user_id != login_session['user_id']:
+		return "<script> function foo() {alert('You are not authorized to edit this category.')}</script><body onload='foo()'>"
+	if request.method == 'POST':
+		if request.form['name']:
+			category.name = request.form['name']
+			flash('Category successfully edited as ' + category.name)
+			return redirect(url_for('show_home'))
+	if request.method == 'GET':
+		return render_template('edit_category.html', category = category)
 
 # Login route, create anit-forgery state token
 @app.route('/login')
