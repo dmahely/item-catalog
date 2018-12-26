@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, make_response, redirect, flash, session as login_session
+from flask import Flask, render_template, request, make_response, redirect, flash, url_for, session as login_session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from db_setup import Base, Item, Category, User
@@ -20,17 +20,38 @@ CLIENT_ID = json.loads(
 
 # main page
 @app.route('/')
-@app.route('/catalog/')
+@app.route('/categories/')
 def show_home():
-	state =''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
-	login_session['state'] = state
-	return render_template('home.html', STATE=state)
-# login function
-# @app.route('/login/')
-# def show_login():
-# 	state =''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(32))
-# 	login_session['state'] = state
-# 	return render_template('login.html', STATE=state)
+	categories = session.query(Category).all()
+	latest_items = session.query(Item).order_by("date_added desc")
+	if 'username' not in login_session:
+		return render_template('home.html', categories = categories, latest_items = latest_items)
+	else:
+		return render_template('user_home.html', categories = categories, latest_items = latest_items)
+
+@app.route('/categories/new', methods=['GET', 'POST'])
+def create_category():
+	if request.method == 'POST':
+		if 'user_id' not in login_session and 'email' in login_session:
+			login_session['user_id'] = get_user_id(login_session)
+		new_category = Category(
+			name = request.form['name'],
+			user_id = login_session['user_id'])
+		session.add(new_category)
+		session.commit()
+		flash("New category created")
+		return redirect(url_for("show_home"))
+	if request.method == 'GET':
+		return render_template('new_category.html')
+
+# Login route, create anit-forgery state token
+@app.route('/login')
+def show_login():
+    state = ''.join(
+        random.choice(
+            string.ascii_uppercase + string.digits) for x in range(32))
+    login_session['state'] = state
+    return render_template('login.html', STATE=state)
 
 # google login
 @app.route('/gconnect', methods=['POST'])
@@ -109,9 +130,9 @@ def gconnect():
     login_session['email'] = data['email']
 
     # see if user exists, if not create new user
-    user_id = getUserID(login_session['email'])
+    user_id = get_user_id(login_session['email'])
     if not user_id:
-        user_id = createUser(login_session)
+        user_id = create_new_user(login_session)
     login_session['user_id'] = user_id
 
     output = ''
@@ -160,7 +181,7 @@ def gdisconnect():
         return response
 
 # User helper functions
-def getUserID(email):
+def get_user_id(email):
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
@@ -168,12 +189,12 @@ def getUserID(email):
         return None
 
 
-def getUserInfo(user_id):
+def get_user(user_id):
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
 
-def createUser(login_session):
+def create_new_user(login_session):
     newUser = User(
         name=login_session['username'],
         email=login_session['email'],

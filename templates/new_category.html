@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Create a New Category</title>
+</head>
+<body>
+	<form method="post">
+				<div class="form-group">
+					<label for="name">Name:</label>
+					<input type ="text" maxlength="50" class="form-control" name="name" placeholder="Name of the category">
+                    <div style="margin-top: 1rem">
+                        <button type="submit" class="btn btn-success" id="submit" type="submit">
+                        	<span class="glyphicon glyphicon-glass" aria-hidden="true"></span>
+								Create
+						</button>
+                        <button class="btn btn-default delete">
+                            <a href = "{{ url_for('show_home') }}">
+                                Cancel
+                            </a>
+                        </button>
+                    </div>
+				</div>
+			</form>
+</body>
+</html>
