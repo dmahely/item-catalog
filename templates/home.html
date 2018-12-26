@@ -17,7 +17,25 @@
         data-approvalprompt="force">
       </span>
     </div>
-    <div id="result"></div>
+
+    <aside>
+    	<h2>Latest Items</h2>
+    	{% for item in latest_items %}
+    	<span>{{item.name}}</span>
+    	<span>{{item.category_id}}</span>
+    	{%endfor%}
+    </aside>
+
+    <main>
+    	<h2>Categories</h2>
+    	<ol>
+    	{% for category in categories %}
+    		<li>
+    			{{category.name}}
+    		</li>
+    	{%endfor%}
+    	</ol>
+    </main>
 </body>
 <script>
         function signInCallback(authResult) {
@@ -46,6 +64,7 @@
                     }
                 }
         }); } }
+
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="//apis.google.com/js/platform.js?onload=start"></script>
