@@ -139,6 +139,21 @@ def edit_item(category_id, item_id):
     if request.method == 'GET':
         return render_template('edit_item.html', item = item, category = category)
 
+@app.route('/categories/<int:category_id>/item/<int:item_id>/delete', methods=['GET', 'POST'])
+@login_required
+def delete_item(category_id, item_id):
+    item = session.query(Item).filter_by(id = item_id).one()
+    category = session.query(Category).filter_by(id = category_id).one()
+    if item.user_id != login_session['user_id']:
+        return "<script>function foo() {alert('You are not authorized!')}</script><body onload='foo()'>"
+    if request.method == 'POST':
+        session.delete(item)
+        session.commit()
+        flash(item.name + ' was successfully deleted')
+        return redirect(url_for('show_category', category_id = category_id))
+    if request.method == 'GET':
+        return render_template('delete_item.html', item = item, category = category)
+
 # Login route, create anit-forgery state token
 @app.route('/login')
 def show_login():
