@@ -6,6 +6,7 @@
 <body>
 	<h1>All Items in {{ category.name }}</h1>
 	<a href="">Add an Item</a>
+	<a href="{{ url_for('delete_category', category_id = category.id) }}">Delete this category</a>
 	{% for item in items %}
 	<p>{{ item.name }}</p>
 	{% endfor %}

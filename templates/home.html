@@ -19,10 +19,9 @@
     <main>
     	<h2>Categories</h2>
     	<ol>
-    	{% for category in categories %}
-    		<li>
-    			{{category.name}}
-    		</li>
+    	<li>
+            <a href='/categories/{{category.id}}'>{{category.name}}</a>
+            </li>
     	{%endfor%}
     	</ol>
     </main>

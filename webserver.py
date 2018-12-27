@@ -75,6 +75,24 @@ def show_category(category_id):
 	items = session.query(Item).filter_by(category_id = category_id)
 	return render_template('category.html', category = category, items = items)
 
+@app.route('/categories/<int:category_id>/delete', methods=['GET', 'POST'])
+@login_required
+def delete_category(category_id):
+	category = session.query(Category).filter_by(id = category_id).one()
+	items = session.query(Item).filter_by(category_id = category_id)
+	if category.user_id != login_session['user_id']:
+		return "<script>function myFunction() {alert('You are not authorized!')}</script><body onload='myFunction()'>"
+	if request.method == 'POST':
+		session.delete(category)
+		session.commit()
+		for item in items:
+			session.delete(item)
+			session.commit()
+		flash(category.name + ' and all its items were successfully deleted')
+		return redirect(url_for('show_home'))
+	if request.method == 'GET':
+		return render_template('delete_category.html', category = category)
+
 # Login route, create anit-forgery state token
 @app.route('/login')
 def show_login():
