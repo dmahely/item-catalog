@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, make_response, redirect, flash, url_for, session as login_session
+from flask import Flask, render_template, request, make_response, redirect, flash, url_for, session as login_session, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from db_setup import Base, Item, Category, User
@@ -153,6 +153,25 @@ def delete_item(category_id, item_id):
         return redirect(url_for('show_category', category_id = category_id))
     if request.method == 'GET':
         return render_template('delete_item.html', item = item, category = category)
+
+@app.route('/catalog/json')
+# returns all the items in all of the categories
+def show_catalog_json():
+    items = session.query(Item).order_by("date_added desc")
+    return jsonify(items = [i.serialize for i in items])
+
+@app.route('/categories/json')
+# returns all the categories
+def show_categories_json():
+    categories = session.query(Category).all()
+    return jsonify(categories = [c.serialize for c in categories])
+
+@app.route('/categories/<int:category_id>/item/<int:item_id>/json')
+# returns selected item
+def show_item_json(category_id, item_id):
+    item = session.query(Item).filter_by(id = item_id).one()
+    return jsonify(item = item.serialize)
+
 
 # Login route, create anit-forgery state token
 @app.route('/login')

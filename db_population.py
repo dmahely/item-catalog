@@ -20,6 +20,8 @@ user1 = User(name="Doaa",
 session.add(user1)
 session.commit()
 
+print("Users added")
+
 # Some categories
 category1 = Category(name="Soccer",
                      user_id=1)
