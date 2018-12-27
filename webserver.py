@@ -112,6 +112,11 @@ def create_item(category_id):
 	if request.method == 'GET':
 		return render_template('new_item.html', category = category)
 
+@app.route('/categories/items/<int:item_id>')
+def show_item(item_id):
+    item = session.query(Item).filter_by(id = item_id).one()
+    return render_template('item.html', item = item)
+
 # Login route, create anit-forgery state token
 @app.route('/login')
 def show_login():
