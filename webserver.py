@@ -69,6 +69,12 @@ def edit_category(category_id):
 	if request.method == 'GET':
 		return render_template('edit_category.html', category = category)
 
+@app.route('/categories/<int:category_id>')
+def show_category(category_id):
+	category = session.query(Category).filter_by(id = category_id).one()
+	items = session.query(Item).filter_by(category_id = category_id)
+	return render_template('category.html', category = category, items = items)
+
 # Login route, create anit-forgery state token
 @app.route('/login')
 def show_login():

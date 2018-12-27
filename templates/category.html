@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{ category.name }} Items</title>
+</head>
+<body>
+	<h1>All Items in {{ category.name }}</h1>
+	<a href="">Add an Item</a>
+	{% for item in items %}
+	<p>{{ item.name }}</p>
+	{% endfor %}
+</body>
+</html>

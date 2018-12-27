@@ -19,7 +19,7 @@
     	<ol>
     	{% for category in categories %}
     		<li>
-    			{{category.name}}
+    			<a href='/categories/{{category.id}}'>{{category.name}}</a>
     		</li>
     	{%endfor%}
     	</ol>
