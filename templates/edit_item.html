@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Edit {{ item.name }}</title>
+</head>
+<body>
+	<h1>Edit {{ item.name }}</h1>
+	<form action="{{url_for('edit_item', item_id = item.id, category_id = category.id)}}" method='post'>
+		<input type='text' name='name' placeholder='{{item.name}}'>
+		<br>
+		<input type='text' name='price' placeholder='{{item.price}}'>
+		<br>
+		<textarea type='text' name='description' placeholder='{{item.description}}'></textarea>
+		<br>
+		<input type='submit' value='Edit'>
+		<a href="{{ url_for('show_category', category_id = category.id) }}">Cancel</a>
+	</form>
+</body>
+</html>

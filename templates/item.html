@@ -7,6 +7,7 @@
 	<h1>{{ item.name }} Description</h1>
 	<p>{{ item.price }}</p>
 	<p>{{ item.description }}</p>
-	<a href="/categories/{{item.category_id}}">Back</a>
+	<a href="{{url_for('edit_item', item_id = item.id, category_id = category.id)}}">Edit</a>
+	<a href="{{ url_for('show_category', category_id = category.id) }}">Back</a>
 </body>
 </html>

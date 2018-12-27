@@ -112,10 +112,32 @@ def create_item(category_id):
 	if request.method == 'GET':
 		return render_template('new_item.html', category = category)
 
-@app.route('/categories/items/<int:item_id>')
-def show_item(item_id):
+@app.route('/categories/<int:category_id>/item/<int:item_id>')
+def show_item(category_id, item_id):
+    category = session.query(Category).filter_by(id = category_id).one()
     item = session.query(Item).filter_by(id = item_id).one()
-    return render_template('item.html', item = item)
+    user = get_user(category.user_id)
+    return render_template('item.html', item = item, category = category, user = user)
+
+@app.route('/categories/<int:category_id>/item/<int:item_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_item(category_id, item_id):
+    item = session.query(Item).filter_by(id = item_id).one()
+    category = session.query(Category).filter_by(id = category_id).one()
+    # if user is not authorized to edit this item
+    if item.user_id != login_session['user_id']:
+        return "<script> function foo() {alert('You are not authorized to edit this item.')}</script><body onload='foo()'>"
+    if request.method == 'POST':
+        if request.form['name']:
+            item.name = request.form['name']
+        if request.form['price']:
+            item.price = request.form['price']
+        if request.form['description']:
+            item.description = request.form['description']
+        flash(item.name + ' successfully edited')
+        return redirect(url_for('show_item', category_id = category.id, item_id = item.id))
+    if request.method == 'GET':
+        return render_template('edit_item.html', item = item, category = category)
 
 # Login route, create anit-forgery state token
 @app.route('/login')
