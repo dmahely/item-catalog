@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from db_setup import Base, Item, Category, User
 from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 from functools import wraps
-import httplib2
+import httplib2, datetime
 import json, random, string, requests
 
 app = Flask(__name__)
@@ -81,7 +81,7 @@ def delete_category(category_id):
 	category = session.query(Category).filter_by(id = category_id).one()
 	items = session.query(Item).filter_by(category_id = category_id)
 	if category.user_id != login_session['user_id']:
-		return "<script>function myFunction() {alert('You are not authorized!')}</script><body onload='myFunction()'>"
+		return "<script>function foo() {alert('You are not authorized!')}</script><body onload='foo()'>"
 	if request.method == 'POST':
 		session.delete(category)
 		session.commit()
@@ -92,6 +92,25 @@ def delete_category(category_id):
 		return redirect(url_for('show_home'))
 	if request.method == 'GET':
 		return render_template('delete_category.html', category = category)
+
+@app.route('/categories/<int:category_id>/add', methods=['GET', 'POST'])
+@login_required
+def create_item(category_id):
+	category = session.query(Category).filter_by(id = category_id).one()
+	if request.method == 'POST':
+		item = Item(
+			name = request.form['name'],
+			description = request.form['description'],
+			price = request.form['price'],
+			date_added = datetime.datetime.now(),
+			category_id = category.id,
+			user_id = login_session['user_id'])
+		session.add(item)
+		session.commit()
+		flash("New item successfully created")
+		return redirect(url_for('show_category', category_id = category_id))
+	if request.method == 'GET':
+		return render_template('new_item.html', category = category)
 
 # Login route, create anit-forgery state token
 @app.route('/login')
