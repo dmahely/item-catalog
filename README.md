@@ -18,7 +18,7 @@ You must have Python installed on your machine. Check your Python version by run
 10. Run `python db_setup`. This command will create a file named `items.db` in the same directory.
 11. Run `python db_population.py`. This command will populate the database with some items and categories.
 12. Run `python webserver.py`. This command will get the server up and running.
-13. Go to [http://localhost:8080/](http://localhost:5000/) in your browser.
+13. Go to [http://localhost:5000/](http://localhost:5000/) in your browser.
 
 # After Running the Program
 You should see a webpage that has some categories and some items.
