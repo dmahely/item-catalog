@@ -1,11 +1,13 @@
+{% include 'main.html' %}
+{% include 'nav.html' %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Login</title>
 </head>
 <body>
-    <h2>Please Login</h2>
-    <div id="signInButton">
+    <h2 class="text-center h2" style="margin-top:100px; margin-bottom:15px">Please login</h2>
+    <div id="signInButton" class="text-center">
         <span class="g-signin"
         data-scope="openid email"
         data-clientid="567188669051-phqhet4c3pvbrcii1hd6vshjioid41sk.apps.googleusercontent.com"
@@ -16,6 +18,7 @@
         data-approvalprompt="force">
       </span>
     </div>
+    <div id="result" class="text-center h5"></div>
     <script>
         function signInCallback(authResult) {
         if (authResult['code']) {
@@ -34,7 +37,7 @@
                         $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
                         setTimeout(function() {
                         window.location.href = "/categories/";
-                        }, 4000);
+                        }, 2500);
 
                     } else if (authResult['error']) {
                         console.log('There was an error: ' + authResult['error']);

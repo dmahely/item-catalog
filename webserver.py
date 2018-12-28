@@ -31,86 +31,86 @@ def login_required(f):
 @app.route('/')
 @app.route('/categories/')
 def show_home():
-	categories = session.query(Category).all()
-	latest_items = session.query(Item).order_by("date_added desc")
-	if 'username' not in login_session:
-		return render_template('home.html', categories = categories, latest_items = latest_items)
-	else:
-		return render_template('user_home.html', categories = categories, latest_items = latest_items)
+    categories = session.query(Category).all()
+    latest_items = session.query(Item).order_by("date_added desc")
+    return render_template('home.html', categories = categories, latest_items = latest_items)
 
 @app.route('/categories/new', methods=['GET', 'POST'])
 @login_required
 def create_category():
-	if request.method == 'POST':
-		if 'user_id' not in login_session and 'email' in login_session:
-			login_session['user_id'] = get_user_id(login_session)
-		new_category = Category(
-			name = request.form['name'],
-			user_id = login_session['user_id'])
-		session.add(new_category)
-		session.commit()
-		flash("New category created")
-		return redirect(url_for("show_home"))
-	if request.method == 'GET':
-		return render_template('new_category.html')
+    if request.method == 'POST':
+        if 'user_id' not in login_session and 'email' in login_session:
+            login_session['user_id'] = get_user_id(login_session)
+        if request.form['name']:
+            new_category = Category(
+                name = request.form['name'],
+                user_id = login_session['user_id'])
+            session.add(new_category)
+            session.commit()
+            flash("New category created")
+            return redirect(url_for("show_home"))
+    if request.method == 'GET':
+        return render_template('new_category.html')
 
 @app.route('/categories/<int:category_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_category(category_id):
-	category = session.query(Category).filter_by(id = category_id).one()
-	# if user is not authorized to edit this category
-	if category.user_id != login_session['user_id']:
-		return "<script> function foo() {alert('You are not authorized to edit this category.')}</script><body onload='foo()'>"
-	if request.method == 'POST':
-		if request.form['name']:
-			category.name = request.form['name']
-			flash('Category successfully edited as ' + category.name)
-			return redirect(url_for('show_home'))
-	if request.method == 'GET':
-		return render_template('edit_category.html', category = category)
+    category = session.query(Category).filter_by(id = category_id).one()
+    # if user is not authorized to edit this category
+    if category.user_id != login_session['user_id']:
+        return "<script> function foo() {alert('You are not authorized to edit this category.')}</script><body onload='foo()'>"
+    else:
+        if request.method == 'POST':
+            if request.form['name']:
+                category.name = request.form['name']
+                flash('Category successfully edited as ' + category.name)
+                return redirect(url_for('show_home'))
+        if request.method == 'GET':
+            return render_template('edit_category.html', category = category)
 
 @app.route('/categories/<int:category_id>')
 def show_category(category_id):
-	category = session.query(Category).filter_by(id = category_id).one()
-	items = session.query(Item).filter_by(category_id = category_id)
-	return render_template('category.html', category = category, items = items)
+    category = session.query(Category).filter_by(id = category_id).one()
+    items = session.query(Item).filter_by(category_id = category_id)
+    return render_template('category.html', category = category, items = items)
 
 @app.route('/categories/<int:category_id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete_category(category_id):
-	category = session.query(Category).filter_by(id = category_id).one()
-	items = session.query(Item).filter_by(category_id = category_id)
-	if category.user_id != login_session['user_id']:
-		return "<script>function foo() {alert('You are not authorized!')}</script><body onload='foo()'>"
-	if request.method == 'POST':
-		session.delete(category)
-		session.commit()
-		for item in items:
-			session.delete(item)
-			session.commit()
-		flash(category.name + ' and all its items were successfully deleted')
-		return redirect(url_for('show_home'))
-	if request.method == 'GET':
-		return render_template('delete_category.html', category = category)
+    category = session.query(Category).filter_by(id = category_id).one()
+    items = session.query(Item).filter_by(category_id = category_id)
+    if category.user_id != login_session['user_id']:
+        return "<script>function foo() {alert('You are not authorized to delete this category.')}</script><body onload='foo()'>"
+    else:
+        if request.method == 'POST':
+            session.delete(category)
+            session.commit()
+            for item in items:
+                session.delete(item)
+                session.commit()
+            flash(category.name + ' and all its items were successfully deleted')
+            return redirect(url_for('show_home'))
+        if request.method == 'GET':
+            return render_template('delete_category.html', category = category)
 
 @app.route('/categories/<int:category_id>/add', methods=['GET', 'POST'])
 @login_required
 def create_item(category_id):
-	category = session.query(Category).filter_by(id = category_id).one()
-	if request.method == 'POST':
-		item = Item(
-			name = request.form['name'],
-			description = request.form['description'],
-			price = request.form['price'],
-			date_added = datetime.datetime.now(),
-			category_id = category.id,
-			user_id = login_session['user_id'])
-		session.add(item)
-		session.commit()
-		flash("New item successfully created")
-		return redirect(url_for('show_category', category_id = category_id))
-	if request.method == 'GET':
-		return render_template('new_item.html', category = category)
+    category = session.query(Category).filter_by(id = category_id).one()
+    if request.method == 'POST':
+        item = Item(
+            name = request.form['name'],
+            description = request.form['description'],
+            price = request.form['price'],
+            date_added = datetime.datetime.now(),
+            category_id = category.id,
+            user_id = login_session['user_id'])
+        session.add(item)
+        session.commit()
+        flash("New item successfully created")
+        return redirect(url_for('show_category', category_id = category_id))
+    if request.method == 'GET':
+        return render_template('new_item.html', category = category)
 
 @app.route('/categories/<int:category_id>/item/<int:item_id>')
 def show_item(category_id, item_id):
@@ -270,7 +270,7 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '  # noqa
+    output += ' " style = "width: 100px; height: 100px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '  # noqa
     flash("you are now logged in as %s" % login_session['username'], 'success')
     print("done!")
     return output
@@ -359,6 +359,6 @@ def create_new_user(login_session):
     return user.id
 
 if __name__ == '__main__':
-	app.secret_key = 'secret_key'
-	app.debug = True
-	app.run(host='0.0.0.0', port=5000)
+    app.secret_key = 'secret_key'
+    app.debug = True
+    app.run(host='0.0.0.0', port=5000)

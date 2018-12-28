@@ -6,12 +6,24 @@
 	<title>{{ category.name }} Items</title>
 </head>
 <body>
-	<h1 class="h1 text-center">All Items in {{ category.name }}</h1>
-	<a href="{{ url_for('create_item', category_id = category.id) }}">Add an Item</a>
-	<a href="{{ url_for('delete_category', category_id = category.id) }}">Delete this category</a>
+	<h1 class="h1 text-center" style="margin-top:10px">All Items in {{ category.name }}</h1>
+	<div class="container">
+		<div class="row">
+	<ul class="col-lg-12 h2">Items:
 	{% for item in items %}
+	<li class="h6" style="margin-top:10px">
 	<a href="{{ url_for('show_item', item_id = item.id, category_id = category.id)}}">{{ item.name }}</a>
+	</li>
 	{% endfor %}
-	<button type="button" class="btn btn-primary">Primary</button>
+	</ul>
+	<div class="center">
+	<a href="{{ url_for('create_item', category_id = category.id) }}" class="btn btn-primary" style="margin-bottom: 10px">Add an Item</a>
+	<br>
+	<a href="{{ url_for('edit_category', category_id = category.id) }}" class="btn btn-primary" style="margin-bottom: 10px">Edit this category</a>
+	<br>
+	<a href="{{ url_for('delete_category', category_id = category.id) }}" class="btn btn-danger">Delete this category</a>
+</div>
+</div>
+</div>
 </body>
 </html>

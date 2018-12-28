@@ -1,23 +1,20 @@
+{% include 'main.html' %}
+{% include 'nav.html' %}
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Edit Category {{ category.name }}</title>
+	<title>Edit Category</title>
 </head>
 <body>
+	<div class="container">
+		<h1 class="h1 text-center">Edit {{category.name}}</h1>
 	<form action="{{ url_for('edit_category',category_id = category.id)}}"  method="post">
-		<div>
-					<label for="name">Name:</label>
-					<input type ="text" maxlength="50" name="name" value="{{category.name}}">
-					<div style="margin-top: 1rem">
-						<button type="submit">
-								Edit
-						</button>
-						<button>
-							<span></span>
-							<a href = "{{ url_for('show_home') }}">
-								Cancel
-							</a>
-						</button>
+					<label for="name"><b>Name:</b></label>
+					<input type ="text" maxlength="50" name="name" placeholder="{{category.name}}" class="form-control" required>
+					<br>
+						<button type="submit" class="btn btn-primary">Edit</button>
+						<a href = "{{ url_for('show_home') }}" class="btn btn-light">Cancel</a>
 	</form>
+</div>
 </body>
 </html>

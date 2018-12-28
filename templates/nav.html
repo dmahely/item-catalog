@@ -1,6 +1,6 @@
 <ul class="nav navbar bg-dark">
-	<li class="navbar-brand" style="color:white">
-		Catalog App
+	<li class="navbar-brand">
+		<a style="color:white; text-decoration:none" href="{{ url_for('show_home') }}">Catalog App</a>
 	</li>
 	{% if 'username' not in session %}
 	<li class="nav-item">

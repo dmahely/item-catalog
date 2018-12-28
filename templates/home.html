@@ -11,10 +11,10 @@
     <aside class="col-sm">
         <h2>Latest Items</h2>
         {% for item in latest_items %}
-        <span>{{item.name}}</span>
         {% for category in categories %}
         {% if category.id == item.category_id %}
-        <span style="color:gray">({{ category.name }})</span>
+        <p>
+        <span>{{item.name}} </span><span style="color:gray"><i>({{ category.name }})</i></span></p>
         {%endif%}
         {%endfor%}
         {%endfor%}
@@ -28,8 +28,7 @@
             </li>
         {%endfor%}
         </ol>
-        <p style="display:inline;">Looking for something else?</p>
-        <a href="{{ url_for('create_category') }}">Add a New Category</a>
+        <a href="{{ url_for('create_category') }}" class="btn btn-primary">Add a New Category</a>
     </main>
  </div>
 </div>

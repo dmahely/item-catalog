@@ -1,19 +1,23 @@
+{% include 'main.html' %}
+{% include 'nav.html' %}
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Edit {{ item.name }}</title>
 </head>
 <body>
-	<h1>Edit {{ item.name }}</h1>
+	<div class="container">
+	<h1 class="h1 text-center">Edit {{ item.name }}</h1>
 	<form action="{{url_for('edit_item', item_id = item.id, category_id = category.id)}}" method='post'>
-		<input type='text' name='name' placeholder='{{item.name}}'>
+		<label for="name"><b>Name:</b></label>
+		<input type='text' name='name' placeholder='{{item.name}}' class="form-control" required>
+		<label for="price"><b>Price:</b></label>
+		<input type='text' name='price' placeholder='{{item.price}}' class="form-control" required>
+		<label for="description"><b>Description:</b></label>
+		<textarea type='text' name='description' placeholder='{{item.description}}' class="form-control" required></textarea>
 		<br>
-		<input type='text' name='price' placeholder='{{item.price}}'>
-		<br>
-		<textarea type='text' name='description' placeholder='{{item.description}}'></textarea>
-		<br>
-		<input type='submit' value='Edit'>
-		<a href="{{ url_for('show_category', category_id = category.id) }}">Cancel</a>
+		<input class="btn btn-primary" type='submit' value='Edit'>
+		<a class="btn btn-light" href="{{ url_for('show_category', category_id = category.id) }}">Cancel</a>
 	</form>
 </body>
 </html>

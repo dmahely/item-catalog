@@ -1,14 +1,23 @@
+{% include 'main.html' %}
+{% include 'nav.html' %}
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Item Description</title>
 </head>
 <body>
-	<h1>{{ item.name }} Description</h1>
-	<p>{{ item.price }}</p>
-	<p>{{ item.description }}</p>
-	<a href="{{url_for('edit_item', item_id = item.id, category_id = category.id)}}">Edit</a>
-	<a href="{{url_for('delete_item', item_id = item.id, category_id = category.id)}}">Delete</a>
-	<a href="{{ url_for('show_category', category_id = category.id) }}">Back</a>
+	<h1 class="h1 text-center" style="margin-top:10px">{{ item.name }}</h1>
+	<div class="container">
+		<div class="row">
+	<p class="col-12"><b>Price:</b> {{ item.price }}</p>
+	<p class="col-12"><b>Description:</b> {{ item.description }}</p>
+	<p class="col-12"><b>Added by:</b> {{user.name}}</p>
+	<div class="center col-12">
+	<a href="{{url_for('edit_item', item_id = item.id, category_id = category.id)}}" class="btn btn-primary">Edit</a>
+	<a href="{{url_for('delete_item', item_id = item.id, category_id = category.id)}}" class="btn btn-danger">Delete</a>
+	<a href="{{ url_for('show_category', category_id = category.id) }}" class="btn btn-secondary">Back</a>
+	</div>
+	</div>
+</div>
 </body>
 </html>
