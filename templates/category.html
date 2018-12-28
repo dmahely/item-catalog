@@ -1,14 +1,17 @@
+{% include 'main.html' %}
+{% include 'nav.html' %}
 <!DOCTYPE html>
 <html>
 <head>
 	<title>{{ category.name }} Items</title>
 </head>
 <body>
-	<h1>All Items in {{ category.name }}</h1>
+	<h1 class="h1 text-center">All Items in {{ category.name }}</h1>
 	<a href="{{ url_for('create_item', category_id = category.id) }}">Add an Item</a>
 	<a href="{{ url_for('delete_category', category_id = category.id) }}">Delete this category</a>
 	{% for item in items %}
 	<a href="{{ url_for('show_item', item_id = item.id, category_id = category.id)}}">{{ item.name }}</a>
 	{% endfor %}
+	<button type="button" class="btn btn-primary">Primary</button>
 </body>
 </html>
