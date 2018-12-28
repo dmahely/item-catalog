@@ -1,35 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Item Catalog</title>
+    <title>Item Catalog</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
 </head>
 <body>
-	<h1>Catalog App</h1>
-	<p>Sign in below to add your items!</p>
-	<button id="login-btn">Login</button>
-
-    <aside>
-    	<h2>Latest Items</h2>
-    	{% for item in latest_items %}
-    	<span>{{item.name}}</span>
-    	<span>{{item.category_id}}</span>
-    	{%endfor%}
+    <nav id="nav-bar">
+    <ul>
+        <li id="nav-title">Items Catalog App</li>
+        <li class="right"><a class="nav-link" href="{{ url_for('show_login') }}">Login</a></li>
+    </ul>
+</nav>
+<div class="container">
+    <aside id="aside">
+        <h2>Latest Items</h2>
+        {% for item in latest_items %}
+        <span>{{item.name}}</span>
+        <span>{{item.category_id}}</span>
+        {%endfor%}
     </aside>
 
     <main>
-    	<h2>Categories</h2>
-    	<ol>
-    	<li>
-            <a href='/categories/{{category.id}}'>{{category.name}}</a>
+        <h2>Categories</h2>
+        <ol>
+        {% for category in categories %}
+            <li>
+                <a href='/categories/{{category.id}}'>{{category.name}}</a>
             </li>
-    	{%endfor%}
-    	</ol>
+        {%endfor%}
+        </ol>
     </main>
+</div>
+
+    <a href="{{ url_for('create_category') }}">Add a New Category</a>
 </body>
 <script>
-	document.getElementById("login-btn").addEventListener('click', function() {
-		window.location.href = "/login";
+    document.getElementById("login-btn").addEventListener('click', function() {
+        window.location.href = "/login";
 
-	}, false);
+    }, false);
 </script>
 </html>

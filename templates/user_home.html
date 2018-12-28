@@ -2,8 +2,15 @@
 <html>
 <head>
 	<title>Item Catalog</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
 </head>
 <body>
+    <nav id="nav-bar">
+    <ul>
+        <li id="nav-title">Items Catalog App</li>
+        <li class="right"><a class="nav-link" href="{{url_for('disconnect')}}">Log Out</a></li>
+    </ul>
+</nav>
 	<h1>Catalog App</h1>
 
     <aside>

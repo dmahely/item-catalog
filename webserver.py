@@ -23,7 +23,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user_id' not in login_session:
-            return redirect(url_for('showLogin'))
+            return redirect(url_for('show_login'))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -308,6 +308,31 @@ def gdisconnect():
             json.dumps('Failed to revoke token for given user.'), 400)
         response.headers['Content-Type'] = 'application/json'
         return response
+
+@app.route('/disconnect')
+def disconnect():
+    if 'username' in login_session:
+        print(login_session)
+        gdisconnect()
+        if 'gplus_id' in login_session:
+                del login_session['gplus_id']
+        if 'credentials' in login_session:
+            del login_session['credentials']
+        if 'username' in login_session:
+            del login_session['username']
+        if 'email' in login_session:
+            del login_session['email']
+        if 'picture' in login_session:
+            del login_session['picture']
+        if 'user_id' in login_session:
+            del login_session['user_id']
+        del login_session['provider']
+        flash("You have successfully been logged out.")
+        print("You logged out")
+        return redirect(url_for('show_home'))
+    else:
+        flash("You aren't logged in")
+        return redirect(url_for('show_home'))
 
 # User helper functions
 def get_user_id(email):
