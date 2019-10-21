@@ -59,6 +59,6 @@ uritemplate==3.0.0
 uritemplate.py==3.0.2
 urllib3==1.24.1
 vboxapi==1.0
-Werkzeug==0.14.1
+Werkzeug==0.15.3
 xattr==0.6.4
 zope.interface==4.1.1
