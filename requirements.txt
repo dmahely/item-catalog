@@ -8,7 +8,7 @@ Flask-Login==0.4.1
 Flask-OAuth==0.13
 httplib2==0.12.0
 itsdangerous==1.1.0
-Jinja2==2.10
+Jinja2==2.11.3
 macholib==1.5.1
 MarkupSafe==1.1.0
 modulegraph==0.10.4
